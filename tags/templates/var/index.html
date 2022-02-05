@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <a href="var01/">var01</a>    <!-- var/ 밑에 있음. 따라서 ./var01/ 임 (http://127.0.0.1:8000/var/var01) -->
+    <br>
+    <a href="/var/var02/">var02</a>  <!-- a href = "var02/" 해도 가능 (/var/var02/ : 맨 앞 슬래시로 인해 root에서 시작하기 때문
+                                           var02/만 작성한 경우는 내 위치 (http://127.0.0.1:8000/var) 에서 시작하기 때문-->
+    <br>
+    <a href="{% url 'for' %} ">for</a>   <!--forloop/-->
+    <br>
+    <a href="if01/">if01</a>
+    <br>
+    <a href="if02/">if02</a>
+    <br>
+    <a href="href/">href</a>
+    <br>
+
+    <a href="request/">get</a>   <!--밑의 form 태그빼고 위의 태그 모두 get 방식임-->
+    <br>
+    <!-- html 에서 유일하게 post 가능한 것 : form 태그-->
+    <form action="request/" method="post">{% csrf_token %}   <!-- form태그 사용시 무조건 csrf_token 같이 사용할 것! -->
+        <input type="submit" value="post">
+    </form>
+    <!-- csrf : Cross-Site Request Forgery
+    A CSRF token : a secure random token (e.g., synchronizer token or challenge token)
+                   that is used to prevent CSRF attacks-->
+</body>
+</html>
