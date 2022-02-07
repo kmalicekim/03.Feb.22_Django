@@ -1,3 +1,7 @@
 *.sqlite3
 images/
 settings.py
+__init__.py
+asgi.py
+wsgi.py
+manage.py
