@@ -7,27 +7,36 @@ from django.contrib.auth.hashers import make_password, check_password
 
 def index(request):
     myboard = MyBoard.objects.all().order_by('-id')
-    paginator = Paginator(myboard,5)          # 페이지당 5개식
+    paginator = Paginator(myboard,5)          # 페이지당 5개씩
     page_num = request.GET.get('page', '1')   # GET방식으로 호출된 url에서 page 값 가져옴.
                                               # page 값 없이 호출 시 디폴트로 1 설정
+    """
+    get은 딕셔너리 자료형에서 key값으로 value를 찾을 때 사용.
+    즉, request.GET 으로 받아온 값은 딕셔너리 자료형이라는 것.
+    ex) http://127.0.0.1:8000/title=first&body=hello
+        {'title':first, 'body':hello}
+    여기서 page에 해당하는 value를 가져오면 page의 번호를 리턴 받을 수 있음
+    """
 
     # 페이지에 맞는 모델 가져오기
     page_obj = paginator.get_page(page_num)   # page_num에 해당하는 page_obj 라는 객체 생성
+    """get_page 메소드는 페이지 번호를 받아 해당 페이지를 리턴.
+    그 후 이 페이지를 다시 render를 통해 넘겨주게 됨"""
 
     # 관련 메서드
-    print(type(page_obj))
-    print(page_obj.count)
-    print(page_obj.paginator.num_pages)
-    print(page_obj.paginator.page_range)
-    print(page_obj.has_next())
-    print(page_obj.has_previous())
+    print(type(page_obj))   # <class 'django.core.paginator.Page'>
+    print(page_obj.count)   # <bound method Sequence.count of <Page 9 of 21>> (내가 9페이지 눌렀음)
+    print(page_obj.paginator.num_pages)   # 21  --- 총 페이지 수
+    print(page_obj.paginator.page_range)  # range(1,22)   --- (1부터 시작하는)페이지 리스트 반환
+    print(page_obj.has_next())            # True
+    print(page_obj.has_previous())        # True
     try:
-        print(page_obj.next_page_number())
-        print(page_obj.previous_page_number())
+        print(page_obj.next_page_number())   # 10
+        print(page_obj.previous_page_number())   # 8
     except:
         pass
-    print(page_obj.start_index())
-    print(page_obj.end_index())
+    print(page_obj.start_index())    # 41
+    print(page_obj.end_index())      # 45
 
     return render(request, 'index.html', {'list': page_obj})   # 'list' 에 page_obj 객체 전달
     #'id'기준으로 정렬해줘 (default:ascending) / ('-id') : descending
