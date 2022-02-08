@@ -39,6 +39,45 @@
             </td>
         </tr>
     </table>
+    <!--추가-->
+    <!--처음으로-->
+    <a href="?page=1">처음</a>
+    <!--이전 페이지-->
+    {% if list.has_previous %}     <!--Page.has_previous() : returns True if there’s a previous page-->
+        <a href="?page={{ list.previous_page_number }}">이전</a> <!--Page.previous_page_number() : Returns the previous page number. Raise InvalidPage if previous page doesn’t exist -->
+    {% else %}
+        <a>이전</a>
+    {% endif %}
+
+    <!--페이징-->
+    {% for page_num in list.paginator.page_range %}  <!-- Paginator.page_range : A 1-based range iterator of page numbers, e.g. yielding[1,2,3,4].-->
+        {% if page_num == list.number %}
+            <b>{{ page_num }}</b>
+        {% else %}
+            <a href="?page={{ page_num }}">{{ page_num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    <!--다음 페이지-->
+    {% if list.has_next %}
+        <a href="?page={{ list.next_page_number }}">다음</a>
+    {% else %}
+        <a>다음</a>
+    {% endif %}
+    <!--끝으로-->
+    <a href="?page={{ list.paginator.num_pages }}">끝</a>
+    <br>
+    <br>
+    <!--회원가입-->
+    <a href="/register/">회원가입</a>
+    <br>
+
+    <!--로그인-->
+    {% if not request.session.myname %}
+    <a href="login/">로그인</a>
+    {% else %}
+    <a href="logout/">로그아웃</a>
+    {% endif %}
 
 </body>
 </html>

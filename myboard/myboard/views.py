@@ -1,10 +1,35 @@
 from django.shortcuts import render, redirect
-from .models import MyBoard
+from .models import MyBoard, MyMember
 from django.utils import timezone
+from django.core.paginator import Paginator
+from django.contrib.auth.hashers import make_password, check_password
 
 
 def index(request):
-    return render(request, 'index.html', {'list': MyBoard.objects.all().order_by('-id')})
+    myboard = MyBoard.objects.all().order_by('-id')
+    paginator = Paginator(myboard,5)          # 페이지당 5개식
+    page_num = request.GET.get('page', '1')   # GET방식으로 호출된 url에서 page 값 가져옴.
+                                              # page 값 없이 호출 시 디폴트로 1 설정
+
+    # 페이지에 맞는 모델 가져오기
+    page_obj = paginator.get_page(page_num)   # page_num에 해당하는 page_obj 라는 객체 생성
+
+    # 관련 메서드
+    print(type(page_obj))
+    print(page_obj.count)
+    print(page_obj.paginator.num_pages)
+    print(page_obj.paginator.page_range)
+    print(page_obj.has_next())
+    print(page_obj.has_previous())
+    try:
+        print(page_obj.next_page_number())
+        print(page_obj.previous_page_number())
+    except:
+        pass
+    print(page_obj.start_index())
+    print(page_obj.end_index())
+
+    return render(request, 'index.html', {'list': page_obj})   # 'list' 에 page_obj 객체 전달
     #'id'기준으로 정렬해줘 (default:ascending) / ('-id') : descending
 
 def insert_form(request):
@@ -65,3 +90,37 @@ def test():
 a = test()
 print(a)  ---> 1나옴. 즉 result_delete는 우변의 return 값을 받는 것
 """
+
+def register(request):
+    if request.method == "GET":
+        return render(request, 'register.html')
+    elif request.method == "POST":
+        myname = request.POST['myname']
+        mypassword = request.POST['mypassword']
+        myemail = request.POST['myemail']
+
+        mymember = MyMember(myname=myname, mypassword=make_password(mypassword), myemail=myemail)
+        mymember.save()
+
+        return redirect('/')
+
+    return redirect('/')
+
+def login(request):
+    if request.method == "GET":
+        return render(request, 'login.html')
+    else:
+        myname = request.POST['myname']
+        mypassword = request.POST['mypassword']
+
+        mymember = MyMember.objects.get(myname=myname)
+
+        if check_password(mypassword, mymember.mypassword):
+            request.session['myname'] = mymember.myname
+            return redirect('/')
+        else:
+            return redirect('/login')
+
+def logout(request):
+    del request.session['myname']   # 클라이언트가 접속 종료하면 해당 session 지움 (DB 내용 지우는게 아님)
+    return redirect('/')

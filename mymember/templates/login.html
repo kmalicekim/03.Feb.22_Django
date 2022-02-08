@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <form action="{% url 'login' %}" method="post">{% csrf_token %}
+        ID : <input type="text" name="username">
+        <br>
+        PW : <input type="text" name="password">
+        <br>
+        <input type="submit" value="로그인">
+    </form>
+
+</body>
+</html>
