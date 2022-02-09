@@ -8,9 +8,11 @@
 
   <h1>Register</h1>
 
-  <form action="." method="post">{% csrf_token %}
+  <form action="." method="post">{% csrf_token %}   <!--"." : 자기 자신-->
     <table>
         {{ form.as_table }}
+        <!--장고가 지원해주고있는 Forms에 UserCreationForm 이 register form 을 자동으로 만들어 주었음.
+        class로 만들었던 MyMemberForm을 (그 객체를) form.as_table —> table 형태로 보이게 해줘) -->
     </table>
     <input type="submit" value="회원가입">
   </form>

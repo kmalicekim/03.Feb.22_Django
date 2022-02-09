@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from . forms import MyMemberForm
+from .forms import MyMemberForm
 
 def index(request):
     return render(request, 'index.html')

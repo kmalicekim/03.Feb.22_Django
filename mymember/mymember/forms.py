@@ -1,6 +1,9 @@
-from django import forms
+# Django 에 기본적으로 회원가입을 위한 내장되어있는 form
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+
+# Django 의 유저 관련 내장 모델
+from django.contrib.auth.models import User   # User가 auth에서 만들어놓은 모델
+from django import forms   # forms 는 화면에 보여주는 것
 
 
 class MyMemberForm(UserCreationForm):
@@ -13,5 +16,5 @@ class MyMemberForm(UserCreationForm):
     last_name = forms.CharField()
 
     class Meta:
-        model = User
+        model = User  # 데이터를 저장하기 위해 내장된 User모델을 지정함
         fields = ('username', 'password1', 'password2', 'first_name', 'last_name', 'email')

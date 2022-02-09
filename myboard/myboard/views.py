@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 
 
 def index(request):
-    myboard = MyBoard.objects.all().order_by('-id')
+    myboard = MyBoard.objects.all().order_by('-id')  #'id'기준으로 정렬해줘 (default:ascending) / ('-id') : descending
     paginator = Paginator(myboard,5)          # 페이지당 5개씩
     page_num = request.GET.get('page', '1')   # GET방식으로 호출된 url에서 page 값 가져옴.
                                               # page 값 없이 호출 시 디폴트로 1 설정
@@ -39,7 +39,6 @@ def index(request):
     print(page_obj.end_index())      # 45
 
     return render(request, 'index.html', {'list': page_obj})   # 'list' 에 page_obj 객체 전달
-    #'id'기준으로 정렬해줘 (default:ascending) / ('-id') : descending
 
 def insert_form(request):
     return render(request, 'insert.html')
@@ -108,7 +107,7 @@ def register(request):
         mypassword = request.POST['mypassword']
         myemail = request.POST['myemail']
 
-        mymember = MyMember(myname=myname, mypassword=make_password(mypassword), myemail=myemail)
+        mymember = MyMember(myname=myname, mypassword=make_password(mypassword), myemail=myemail)  # models.py 확인
         mymember.save()
 
         return redirect('/')
@@ -122,10 +121,10 @@ def login(request):
         myname = request.POST['myname']
         mypassword = request.POST['mypassword']
 
-        mymember = MyMember.objects.get(myname=myname)
+        mymember = MyMember.objects.get(myname=myname) # DB에서 꺼내는 명령. POST로 받아온 myname으로 DB의 myname을 꺼내온다
 
-        if check_password(mypassword, mymember.mypassword):
-            request.session['myname'] = mymember.myname
+        if check_password(mypassword, mymember.mypassword):   # check_password(a,b) : a,b가 일치하는지 확인, 반
+            request.session['myname'] = mymember.myname  # 세션에 id값을 넣음. 로그인 상태를 유지하기 위함
             return redirect('/')
         else:
             return redirect('/login')
